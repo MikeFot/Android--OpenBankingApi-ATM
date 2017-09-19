@@ -1,0 +1,26 @@
+<resources>
+
+    <string name="app_name">UK ATM Db</string>
+    <string name="main_title">Banks</string>
+
+    <string name="bank_of_ireland">Bank of Ireland</string>
+    <string name="bank_of_scotland">Bank of Scotland</string>
+    <string name="bank_danske">Danske</string>
+    <string name="bank_barclays">Barclays</string>
+    <string name="first_trust">First Trust</string>
+    <string name="halifax">Halifax</string>
+    <string name="hsbc">HSBC</string>
+    <string name="nationwide">Nationwide</string>
+    <string name="natwest">Natwest</string>
+    <string name="rbos">Royal Bank of Scotland</string>
+    <string name="santander">Santander</string>
+    <string name="ulster">Ulster</string>
+
+    <string name="menu_title_show_on_map">Show on map</string>
+
+    <string name="message_invalid_location_data">Location data is invalid for selected ATM</string>
+
+    <string name="tag_bank_name">tag_bank</string>
+    <string name="bank_transition">bank_transition</string>
+
+</resources>

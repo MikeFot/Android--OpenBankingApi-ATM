@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+// Lib Versions
+final String retrofit2Version = "2.3.0"
+final String okhttp3Version = "3.9.0"
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile "com.squareup.retrofit2:retrofit:${retrofit2Version}"
+    compile "com.squareup.retrofit2:converter-gson:${retrofit2Version}"
+    compile "com.squareup.okhttp3:okhttp:${okhttp3Version}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
+
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+}

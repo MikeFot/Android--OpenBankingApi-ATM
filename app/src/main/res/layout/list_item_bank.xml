@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="RtlHardcoded">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/AppTheme.TextView.Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_dark"
+        android:textSize="@dimen/text_large"
+        tools:text="Royal Bank of Scotland" />
+
+    <View
+        android:background="@color/accent"
+        android:layout_width="match_parent"
+        android:layout_height="2dp" />
+
+</LinearLayout>

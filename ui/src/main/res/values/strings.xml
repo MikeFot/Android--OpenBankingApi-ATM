@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">UI</string>
+    <string name="label_try_again">Try Again</string>
+
+    <string name="toast_no_network">Please check your network settings</string>
+    <string name="label_no_network_action">Settings</string>
+    <string name="menu_item_search">Search</string>
+
+</resources>
