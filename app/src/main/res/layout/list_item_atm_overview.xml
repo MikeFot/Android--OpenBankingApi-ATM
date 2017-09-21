@@ -8,9 +8,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="@dimen/margin_8dp"
+    android:layout_marginTop="@dimen/margin_4dp"
+    android:layout_marginBottom="@dimen/margin_4dp"
+    android:layout_marginLeft="@dimen/margin_8dp"
+    android:layout_marginRight="@dimen/margin_8dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="@dimen/padding_8dp"
+    app:cardBackgroundColor="@color/md_grey_100"
     tools:ignore="RtlHardcoded">
 
     <android.support.constraint.ConstraintLayout
@@ -35,7 +39,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Dota 2 Just For Fun"/>
+            tools:text="Just For Fun" />
 
         <TextView
             android:id="@+id/summary"
@@ -50,7 +54,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/league_url_label"
-            tools:text="The global Dota 2 league for everyone. Featured are all of the matches from division 1 and 2. There are three leagues: Europe, America, and Asia. The top 10 from each league meet in the premier division. $1.00 from each ticket purchased will go directly into the prizepool."/>
+            tools:text="Blah blah" />
 
         <TextView
             android:id="@+id/league_id"

@@ -23,4 +23,15 @@
     <string name="tag_bank_name">tag_bank</string>
     <string name="bank_transition">bank_transition</string>
 
+    <string name="attribution_banking_images">"Banking Icons Created by Kreativkolors - Freepik.com"</string>
+    <string name="attribution_banking_images_2">"Banking Icons Created by Dooder - Freepik.com"</string>
+    <string name="bullet_placeholder">"\u2022 %1$s"</string>
+    <string name="placeholder_label"> &lt;B&gt;%s&lt;/B&gt;</string>
+    <string name="placeholder_address_street_name">Street: %s</string>
+    <string name="placeholder_address_building_number">Number or Name: %s</string>
+    <string name="placeholder_address_town">Town: %s</string>
+    <string name="placeholder_address_postcode">Postcode: %s</string>
+    <string name="placeholder_minimum_value">Minimum Value Dispensed: %s</string>
+    <string name="placeholder_currency">Currency: %s</string>
+
 </resources>

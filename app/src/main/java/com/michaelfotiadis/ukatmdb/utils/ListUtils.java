@@ -16,6 +16,10 @@ public final class ListUtils {
         // NOOP
     }
 
+    public static <T> boolean isListNotNullOrEmpty(final List<T> list) {
+        return list != null && !list.isEmpty();
+    }
+
     public static <T> List<List<T>> chunk(final List<T> originalList, final int partitionSize) {
 
         final List<List<T>> partitions = new LinkedList<>();

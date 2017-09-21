@@ -6,8 +6,8 @@ import com.michaelfotiadis.ukatmdb.network.client.RestClient;
 import com.michaelfotiadis.ukatmdb.network.client.okhttp.OkHttpFactory;
 import com.michaelfotiadis.ukatmdb.network.model.AtmResponse;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -24,7 +24,7 @@ public class NetworkLoader {
 
     }
 
-    public Observable<AtmResponse> getForBank(final Bank bank) {
+    public Single<AtmResponse> getForBank(final Bank bank) {
 
         final String endpoint = mApiStore.getEndpointForBank(bank);
         final AtmApi atmApi;
@@ -39,10 +39,10 @@ public class NetworkLoader {
 
         return atmApi.getRx().subscribeOn(Schedulers.io())
                 .cache()
-                .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends AtmResponse>>() {
+                .onErrorResumeNext(new Function<Throwable, SingleSource<? extends AtmResponse>>() {
                     @Override
-                    public ObservableSource<? extends AtmResponse> apply(final Throwable throwable) throws Exception {
-                        return Observable.error(throwable);
+                    public SingleSource<? extends AtmResponse> apply(final Throwable throwable) throws Exception {
+                        return Single.error(throwable);
                     }
                 });
 

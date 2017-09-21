@@ -3,10 +3,6 @@ package com.michaelfotiadis.ukatmdb.ui.activity.main;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.transition.Slide;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.view.Gravity;
 import android.view.ViewGroup;
 
 import com.michaelfotiadis.ukatmdb.R;
@@ -41,7 +37,6 @@ public class MainActivity extends BaseActivity implements MainView {
             showBankScreen(bank);
         }
 
-
     }
 
     @Override
@@ -75,7 +70,7 @@ public class MainActivity extends BaseActivity implements MainView {
         final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         final Fragment fragment = AtmOverviewFragment.newInstance(bank);
 
-       fragmentTransaction.setCustomAnimations(R.anim.slide_in_right_chrome, R.anim.fade_out);
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right_chrome, R.anim.fade_out);
 
         fragmentTransaction.replace(CONTENT_ID, fragment, FRAGMENT_TAG);
         fragmentTransaction.addToBackStack(null);
@@ -108,6 +103,10 @@ public class MainActivity extends BaseActivity implements MainView {
             new UserPreferences(this).writeUserSelectedBank(Bank.UNDEFINED);
         }
 
-        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -25,14 +25,15 @@ import com.michaelfotiadis.ukbankatm.ui.toast.AppToast;
 import java.util.Locale;
 
 import butterknife.ButterKnife;
-import dagger.Provides;
 
 public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
 
     private static final String ARG_DETAILS = AtmDetailsFragment.class.getSimpleName() + ".param1";
-    private AtmDetailsPresenter mPresenter;
 
+
+    private AtmDetailsPresenter mPresenter;
     private AtmDetailsHolder mHolder;
+    private ServicesRecyclerController mRecyclerController;
 
     public AtmDetailsFragment() {
         // Required empty public constructor
@@ -83,8 +84,6 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
             final String placeholder = "geo:%s,%s?q=%s,%s (%s)";
 
 
-
-
             final String uri = String.format(Locale.ENGLISH, placeholder, latitude, longitude, latitude, longitude, getAtmDetailsArgument().getLabel());
             final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(intent);
@@ -94,7 +93,6 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
 
 
     }
-
 
 
     private AtmDetails getAtmDetailsArgument() {
@@ -116,8 +114,10 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
         ((BaseActivity) getActivity()).setDisplayHomeAsUpEnabled(true);
 
         mHolder = new AtmDetailsHolder(view);
+        mRecyclerController = new ServicesRecyclerController(view);
 
     }
+
 
     @Override
     public void onResume() {
@@ -151,6 +151,8 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
                 });
 
         binder.bind(mHolder, atmDetails);
+
+        mRecyclerController.setData(atmDetails);
 
     }
 

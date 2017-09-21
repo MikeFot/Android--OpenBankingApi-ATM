@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.michaelfotiadis.ukatmdb.BuildConfig;
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.injection.Injector;
 import com.michaelfotiadis.ukatmdb.loader.BankLoader;
@@ -30,7 +31,9 @@ import com.michaelfotiadis.ukbankatm.ui.viewmanagement.SimpleUiStateKeeper;
 import com.michaelfotiadis.ukbankatm.ui.viewmanagement.UiStateKeeper;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -93,7 +96,8 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
         final String payload = getActivity().getPreferences(Context.MODE_PRIVATE).getString(ARG_OUTSTATE, "");
 
         if (TextUtils.isNotEmpty(payload)) {
-            return mGson.fromJson(payload, new TypeToken<List<AtmDetails>>(){}.getType());
+            return mGson.fromJson(payload, new TypeToken<List<AtmDetails>>() {
+            }.getType());
         } else {
             return Collections.emptyList();
         }
@@ -200,6 +204,29 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
     public void showContent(final List<AtmDetails> atmDetails) {
         writePreferences(atmDetails);
         mContentUpdater.setItems(atmDetails);
+
+        if (BuildConfig.DEBUG) {
+
+            final Set<String> setAdditionalServices = new HashSet<>();
+            final Set<String> setServices = new HashSet<>();
+            for (final AtmDetails details : atmDetails) {
+                if (details.getAdditionalATMServices() != null)
+                    setAdditionalServices.addAll(details.getAdditionalATMServices());
+
+                if (details.getAtmServices() != null)
+                    setServices.addAll(details.getAtmServices());
+
+            }
+
+            for (final String s : setAdditionalServices) {
+                AppLog.d(getBankArgument() + " Additional Services: " + s);
+            }
+
+            for (final String s : setServices) {
+                AppLog.d(getBankArgument() + " ATM Services: " + s);
+            }
+        }
+
 
     }
 

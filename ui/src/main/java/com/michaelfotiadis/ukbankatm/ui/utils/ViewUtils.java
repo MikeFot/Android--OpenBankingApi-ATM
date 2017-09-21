@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -169,7 +170,7 @@ public final class ViewUtils {
         return currentScrollPercentage;
     }
 
-    public static void setDrawable(final View view, final int drawableResId) {
+    public static void setDrawable(final View view, @NonNull final int drawableResId) {
         setDrawable(view, ContextCompat.getDrawable(view.getContext(), drawableResId));
     }
 

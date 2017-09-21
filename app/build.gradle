@@ -31,7 +31,6 @@ final String butterKnifeVersion = "8.6.0"
 final String daggerVersion = "2.11"
 final String googlePlayServicesVersion = "11.0.4"
 
-
 final int versionMajor = 0
 final int versionMinor = 0
 final int versionPatch = 1
@@ -122,8 +121,6 @@ dependencies {
     compile project(':network')
     compile project(':ui')
 
-
-
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
@@ -135,15 +132,14 @@ dependencies {
     compile "com.google.dagger:dagger:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
-
-
-
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'com.michaelfotiadis:android-country-flags:1.0.3'
 
-
+    // Alex's resource mirror
+    compile 'uk.co.alt236:resource-mirror-android:1.0.0'
 
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.3'

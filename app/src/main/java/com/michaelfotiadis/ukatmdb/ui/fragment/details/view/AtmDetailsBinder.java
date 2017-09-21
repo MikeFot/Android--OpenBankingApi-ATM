@@ -3,7 +3,6 @@ package com.michaelfotiadis.ukatmdb.ui.fragment.details.view;
 import android.content.Context;
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.listener.OnItemSelectedListener;
@@ -12,6 +11,7 @@ import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerView
 public class AtmDetailsBinder extends BaseRecyclerViewBinder<AtmDetailsHolder, AtmDetails> {
 
     private final OnItemSelectedListener<AtmDetails> mListener;
+
 
     public AtmDetailsBinder(final Context context, final OnItemSelectedListener<AtmDetails> listener) {
         super(context);

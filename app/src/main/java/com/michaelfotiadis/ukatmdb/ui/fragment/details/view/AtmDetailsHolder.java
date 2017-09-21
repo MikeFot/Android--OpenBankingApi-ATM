@@ -1,5 +1,6 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details.view;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +15,8 @@ public class AtmDetailsHolder extends BaseRecyclerViewHolder {
 
     @BindView(R.id.content)
     TextView mContent;
+    @BindView(R.id.recycler_services)
+    RecyclerView mServicesRecycler;
 
     public AtmDetailsHolder(final View view) {
         super(view);
