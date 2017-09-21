@@ -1,22 +1,21 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details;
 
-import android.content.res.Resources;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
+import com.michaelfotiadis.ukatmdb.ui.fragment.details.factory.UiAtmDetailsFactory;
 import com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.additionalservices.AdditionalServices;
 import com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.additionalservices.AdditionalServicesRecyclerAdapter;
 import com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.generalinfo.GeneralInfoRecyclerAdapter;
-import com.michaelfotiadis.ukatmdb.utils.ListUtils;
 import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.manager.RecyclerManager;
 import com.michaelfotiadis.ukbankatm.ui.utils.ViewUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,17 +27,19 @@ import butterknife.ButterKnife;
 public class ServicesRecyclerController {
 
     @BindView(R.id.recycler_info)
-    RecyclerView mInfoRecycler;
+    RecyclerView infoRecycler;
     @BindView(R.id.recycler_services)
-    RecyclerView mServicesRecycler;
+    RecyclerView servicesRecycler;
     @BindView(R.id.recycler_additonal_services)
-    RecyclerView mAdditionalServicesRecycler;
+    RecyclerView additionalServicesRecycler;
     @BindView(R.id.recycler_accessibility_types)
-    RecyclerView mAccessibilityRecycler;
+    RecyclerView accessibilityRecycler;
     @BindView(R.id.recycler_currency)
-    RecyclerView mCurrencyRecycler;
+    RecyclerView currencyRecycler;
     @BindView(R.id.recycler_languages)
-    RecyclerView mLanguagesRecycler;
+    RecyclerView languagesRecycler;
+    @BindView(R.id.label)
+    TextView labelView;
 
     private RecyclerManager<String> mInfoManager;
     private RecyclerManager<AdditionalServices> mServicesManager;
@@ -47,8 +48,13 @@ public class ServicesRecyclerController {
     private RecyclerManager<AdditionalServices> mCurrencyManager;
     private RecyclerManager<AdditionalServices> mLanguagesManager;
 
+    private final UiAtmDetailsFactory factory;
+
     ServicesRecyclerController(final View view) {
         ButterKnife.bind(this, view);
+
+
+        factory = new UiAtmDetailsFactory(view.getResources());
 
         initInfoRecycler(view);
         initServicesRecycler(view);
@@ -61,55 +67,43 @@ public class ServicesRecyclerController {
 
     protected void setData(final AtmDetails atmDetails) {
 
-        setInfo(atmDetails, mInfoRecycler, mInfoManager);
-
-        setServices(atmDetails.getAtmServices(), mServicesRecycler, mServicesManager);
-        setServices(atmDetails.getAdditionalATMServices(), mAdditionalServicesRecycler, mAdditionalServicesManager);
-        setServices(atmDetails.getAccessibilityTypes(), mAccessibilityRecycler, mAccessibilityManager);
-        setServices(atmDetails.getCurrency(), mCurrencyRecycler, mCurrencyManager);
-        setServices(atmDetails.getSupportedLanguages(), mLanguagesRecycler, mLanguagesManager);
-
-    }
-
-    private void setInfo(final AtmDetails atmDetails,
-                         final RecyclerView recyclerView,
-                         final RecyclerManager<String> recyclerManager) {
-
-        final Resources resources = recyclerView.getResources();
-
-        final List<String> items = new ArrayList<>();
-
+        final String label;
         if (TextUtils.isNotEmpty(atmDetails.getLabel())) {
-            items.add(String.format(resources.getString(R.string.placeholder_label), atmDetails.getLabel()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressBuildingNumberOrName())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_building_number), atmDetails.getAddressBuildingNumberOrName()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressStreetName())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_street_name), atmDetails.getAddressStreetName()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressTownName())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_town), atmDetails.getAddressTownName()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressPostCode())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_postcode), atmDetails.getAddressPostCode()));
+            label = atmDetails.getLabel();
+        } else if (TextUtils.isNotEmpty(atmDetails.getSiteName())) {
+            label = atmDetails.getSiteName();
+        } else if (TextUtils.isNotEmpty(atmDetails.getSiteID())) {
+            label = atmDetails.getSiteID();
+        } else {
+            label = null;
         }
 
-        if (TextUtils.isNotEmpty(atmDetails.getMinimumValueDispensed())) {
-            items.add(String.format(resources.getString(R.string.placeholder_minimum_value), atmDetails.getMinimumValueDispensed()));
+        if (label != null) {
+            labelView.setText(label);
+        } else {
+            ViewUtils.showView(labelView, false);
         }
 
-        recyclerManager.setItems(items);
+        final List<String> items = factory.getInfoItems(atmDetails);
+        mInfoManager.setItems(items);
+
+        setServices(atmDetails.getAtmServices(), servicesRecycler, mServicesManager);
+        setServices(atmDetails.getAdditionalATMServices(), additionalServicesRecycler, mAdditionalServicesManager);
+        setServices(atmDetails.getAccessibilityTypes(), accessibilityRecycler, mAccessibilityManager);
+        setServices(atmDetails.getCurrency(), currencyRecycler, mCurrencyManager);
+        setCountryServices(atmDetails.getSupportedLanguages(), languagesRecycler, mLanguagesManager);
+
     }
+
 
     private void initInfoRecycler(final View view) {
 
-        mInfoRecycler.setHasFixedSize(true);
-        mInfoRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        infoRecycler.setHasFixedSize(true);
+        infoRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         final GeneralInfoRecyclerAdapter adapter = new GeneralInfoRecyclerAdapter(view.getContext());
         mInfoManager = new RecyclerManager.Builder<>(adapter)
-                .setRecycler(mInfoRecycler)
+                .setRecycler(infoRecycler)
                 .setEmptyMessage("Nothing to see here")
                 .build();
 
@@ -121,15 +115,23 @@ public class ServicesRecyclerController {
                              final View recyclerView,
                              final RecyclerManager<AdditionalServices> recyclerManager) {
 
-        final List<AdditionalServices> additionalServices = new ArrayList<>();
+        final List<AdditionalServices> additionalServices = factory.getAdditionalServices(services);
 
-        if (ListUtils.isListNotNullOrEmpty(services)) {
-
-            for (final String atmService : services) {
-                additionalServices.add(new AdditionalServices(atmService));
-            }
-
+        if (additionalServices.isEmpty()) {
+            ViewUtils.showView(recyclerView, false);
+        } else {
+            recyclerManager.setItems(additionalServices);
+            ViewUtils.showViewAnimated(recyclerView, true);
         }
+
+    }
+
+
+    private void setCountryServices(final List<String> services,
+                                    final View recyclerView,
+                                    final RecyclerManager<AdditionalServices> recyclerManager) {
+
+        final List<AdditionalServices> additionalServices = factory.getCountryServices(services);
 
         if (additionalServices.isEmpty()) {
             ViewUtils.showView(recyclerView, false);
@@ -141,12 +143,12 @@ public class ServicesRecyclerController {
     }
 
     private void initServicesRecycler(final View view) {
-        mServicesRecycler.setHasFixedSize(true);
-        mServicesRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        servicesRecycler.setHasFixedSize(true);
+        servicesRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
 
         final AdditionalServicesRecyclerAdapter adapter = new AdditionalServicesRecyclerAdapter(view.getContext());
         mServicesManager = new RecyclerManager.Builder<>(adapter)
-                .setRecycler(mServicesRecycler)
+                .setRecycler(servicesRecycler)
                 .setEmptyMessage("Nothing to see here")
                 .build();
 
@@ -154,12 +156,12 @@ public class ServicesRecyclerController {
     }
 
     private void initAdditionalServicesRecycler(final View view) {
-        mAdditionalServicesRecycler.setHasFixedSize(true);
-        mAdditionalServicesRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        additionalServicesRecycler.setHasFixedSize(true);
+        additionalServicesRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
 
         final AdditionalServicesRecyclerAdapter adapter = new AdditionalServicesRecyclerAdapter(view.getContext());
         mAdditionalServicesManager = new RecyclerManager.Builder<>(adapter)
-                .setRecycler(mAdditionalServicesRecycler)
+                .setRecycler(additionalServicesRecycler)
                 .setEmptyMessage("Nothing to see here")
                 .build();
 
@@ -167,12 +169,12 @@ public class ServicesRecyclerController {
     }
 
     private void initAccessibilityRecycler(final View view) {
-        mAccessibilityRecycler.setHasFixedSize(true);
-        mAccessibilityRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        accessibilityRecycler.setHasFixedSize(true);
+        accessibilityRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
 
         final AdditionalServicesRecyclerAdapter adapter = new AdditionalServicesRecyclerAdapter(view.getContext());
         mAccessibilityManager = new RecyclerManager.Builder<>(adapter)
-                .setRecycler(mAccessibilityRecycler)
+                .setRecycler(accessibilityRecycler)
                 .setEmptyMessage("Nothing to see here")
                 .build();
 
@@ -180,12 +182,12 @@ public class ServicesRecyclerController {
     }
 
     private void initCurrencyRecycler(final View view) {
-        mCurrencyRecycler.setHasFixedSize(true);
-        mCurrencyRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        currencyRecycler.setHasFixedSize(true);
+        currencyRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
 
         final AdditionalServicesRecyclerAdapter adapter = new AdditionalServicesRecyclerAdapter(view.getContext());
         mCurrencyManager = new RecyclerManager.Builder<>(adapter)
-                .setRecycler(mCurrencyRecycler)
+                .setRecycler(currencyRecycler)
                 .setEmptyMessage("Nothing to see here")
                 .build();
 
@@ -193,12 +195,12 @@ public class ServicesRecyclerController {
     }
 
     private void initLanguagesRecycler(final View view) {
-        mLanguagesRecycler.setHasFixedSize(true);
-        mLanguagesRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        languagesRecycler.setHasFixedSize(true);
+        languagesRecycler.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
 
         final AdditionalServicesRecyclerAdapter adapter = new AdditionalServicesRecyclerAdapter(view.getContext());
         mLanguagesManager = new RecyclerManager.Builder<>(adapter)
-                .setRecycler(mLanguagesRecycler)
+                .setRecycler(languagesRecycler)
                 .setEmptyMessage("Nothing to see here")
                 .build();
 

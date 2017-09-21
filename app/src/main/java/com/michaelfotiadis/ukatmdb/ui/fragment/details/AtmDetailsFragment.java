@@ -14,12 +14,9 @@ import android.view.ViewGroup;
 
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
-import com.michaelfotiadis.ukatmdb.ui.fragment.details.view.AtmDetailsBinder;
-import com.michaelfotiadis.ukatmdb.ui.fragment.details.view.AtmDetailsHolder;
 import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.activity.BaseActivity;
 import com.michaelfotiadis.ukbankatm.ui.fragment.BaseFragment;
-import com.michaelfotiadis.ukbankatm.ui.recyclerview.listener.OnItemSelectedListener;
 import com.michaelfotiadis.ukbankatm.ui.toast.AppToast;
 
 import java.util.Locale;
@@ -30,9 +27,7 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
 
     private static final String ARG_DETAILS = AtmDetailsFragment.class.getSimpleName() + ".param1";
 
-
     private AtmDetailsPresenter mPresenter;
-    private AtmDetailsHolder mHolder;
     private ServicesRecyclerController mRecyclerController;
 
     public AtmDetailsFragment() {
@@ -113,7 +108,6 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
         ((BaseActivity) getActivity()).setTitle(getAtmDetailsArgument().getLabel());
         ((BaseActivity) getActivity()).setDisplayHomeAsUpEnabled(true);
 
-        mHolder = new AtmDetailsHolder(view);
         mRecyclerController = new ServicesRecyclerController(view);
 
     }
@@ -140,17 +134,6 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
 
     @Override
     public void showContent(final AtmDetails atmDetails) {
-
-        final AtmDetailsBinder binder = new AtmDetailsBinder(
-                getContext(),
-                new OnItemSelectedListener<AtmDetails>() {
-                    @Override
-                    public void onListItemSelected(final View view, final AtmDetails item) {
-
-                    }
-                });
-
-        binder.bind(mHolder, atmDetails);
 
         mRecyclerController.setData(atmDetails);
 

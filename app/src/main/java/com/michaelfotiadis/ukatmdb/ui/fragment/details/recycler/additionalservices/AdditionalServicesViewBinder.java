@@ -27,18 +27,24 @@ public class AdditionalServicesViewBinder extends BaseRecyclerViewBinder<Additio
             ViewUtils.setDrawable(holder.accessibilityImage, item.getDrawable());
         }
 
-        final String placeholder = getString(R.string.bullet_placeholder);
+        // sorry about that - country codes, currency codes hack
+        if (item.getDescription().length() < 4) {
+            holder.description.setText(item.getDescription());
+        } else {
 
-        String[] split = item.getDescription().split("(?=\\p{Lu})");
-        String formattedDesc = "";
-        for (final String s : split) {
-            formattedDesc += s;
-            formattedDesc += " ";
+            final String placeholder = getString(R.string.bullet_placeholder);
+
+            final String[] split = item.getDescription().split("(?=\\p{Lu})");
+            String formattedDesc = "";
+            for (final String s : split) {
+                formattedDesc += s;
+                formattedDesc += " ";
+            }
+            formattedDesc = formattedDesc.trim();
+
+            final String desc = String.format(placeholder, formattedDesc);
+            holder.description.setText(desc);
         }
-        formattedDesc = formattedDesc.trim();
-
-        final String desc = String.format(placeholder, formattedDesc);
-        holder.description.setText(desc);
 
     }
 }

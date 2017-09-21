@@ -10,50 +10,22 @@ import uk.co.alt236.resourcemirror.Mirror;
 public class ImageLoader {
 
     @DrawableRes
-    public static int getImageIdReflectively(final String drawableName, final ImageFamily family) {
+    public static int getCountryImageIdReflectively(final String drawableName) {
 
-        AppLog.d("Looking for drawable name: " + drawableName + " of family " + family);
+        AppLog.d("Looking for drawable name: " + drawableName);
 
-        return Mirror.of("com.michaelfotiadis.ukatmdb").getDrawables().optListDrawableId(drawableName, getFamily(family), getFallback(family));
 
-    }
-
-    @DrawableRes
-    private static int getFallback(final ImageFamily family) {
-
-        switch (family) {
-
-            case COUNTRY:
-                return R.drawable.ic_list_country_unknown;
-            case HERO:
-                break;
-            case ITEM:
-                break;
-            case MINI:
-                break;
+        final String searchName;
+        // known exception, need to update my library
+        if (drawableName.equals("en")) {
+            searchName = "gb";
+        } else {
+            searchName = drawableName.toLowerCase();
         }
-        return R.drawable.ic_list_country_unknown;
-    }
 
-    private static String getFamily(final ImageFamily type) {
-
-        switch (type) {
-
-            case COUNTRY:
-                return "country";
-            case HERO:
-                break;
-            case ITEM:
-                break;
-            case MINI:
-                break;
-        }
-        return "";
+        return Mirror.of("com.michaelfotiadis.ukatmdb").getDrawables().optListDrawableId(searchName, "country", R.drawable.ic_list_country_unknown);
 
     }
 
-    public enum ImageFamily {
-        COUNTRY, HERO, ITEM, MINI
-    }
 
 }

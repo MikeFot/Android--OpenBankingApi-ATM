@@ -25,6 +25,7 @@ public class AtmOverviewPresenter {
     private Single<AtmResponse> mObservable;
     private final AtmOverviewView mView;
     private final Bank mBank;
+    private final DisposableSingleObserver<List<AtmDetails>> mDisposable;
 
     @Inject
     NetworkLoader mNetworkLoader;
@@ -35,6 +36,19 @@ public class AtmOverviewPresenter {
 
         mBank = bank;
         mView = mainView;
+
+        mDisposable = new DisposableSingleObserver<List<AtmDetails>>() {
+            @Override
+            public void onSuccess(@NonNull List<AtmDetails> details) {
+                AppLog.d("Received " + details.size() + " details");
+                mView.showContent(details);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                mView.showError(e);
+            }
+        };
 
     }
 
@@ -55,18 +69,7 @@ public class AtmOverviewPresenter {
                         return details;
                     }
                 })
-                .subscribe(new DisposableSingleObserver<List<AtmDetails>>() {
-                    @Override
-                    public void onSuccess(@NonNull final List<AtmDetails> details) {
-                        AppLog.d("Received " + details.size() + " details");
-                        mView.showContent(details);
-                    }
-
-                    @Override
-                    public void onError(@NonNull final Throwable e) {
-                        mView.showError(e);
-                    }
-                });
+                .subscribe(mDisposable);
 
     }
 
@@ -75,6 +78,7 @@ public class AtmOverviewPresenter {
     }
 
     protected void onStop() {
+        mDisposable.dispose();
         mObservable.unsubscribeOn(AndroidSchedulers.mainThread());
     }
 

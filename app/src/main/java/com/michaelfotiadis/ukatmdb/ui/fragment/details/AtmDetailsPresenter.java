@@ -2,8 +2,9 @@ package com.michaelfotiadis.ukatmdb.ui.fragment.details;
 
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
+/**
+ * Kind of redundant, need to rethink this
+ */
 public class AtmDetailsPresenter {
 
     private final AtmDetails mAtmDetails;

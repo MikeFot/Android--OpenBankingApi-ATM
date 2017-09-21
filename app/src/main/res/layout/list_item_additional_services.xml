@@ -8,13 +8,15 @@
 
     <ImageView
         android:id="@+id/image"
+        android:layout_marginLeft="@dimen/margin_8dp"
+        android:layout_marginStart="@dimen/margin_8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/description"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@id/description"
-        tools:src="@drawable/ic_location_on_white_24dp" />
+        tools:src="@drawable/ic_list_country_ad" />
 
     <TextView
         android:id="@id/description"
