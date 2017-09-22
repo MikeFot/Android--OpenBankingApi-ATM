@@ -36,5 +36,7 @@
     <string name="placeholder_currency">Currency: %s</string>
     <string name="placeholder_postcode">Postcode: :%s</string>
     <string name="placeholder_location_type">Location Type: %s</string>
+    <string name="error_no_permission">We are sorry but we cannot use location services without your permission</string>
+    <string name="menu_item_find_nearest">Find nearest</string>
 
 </resources>

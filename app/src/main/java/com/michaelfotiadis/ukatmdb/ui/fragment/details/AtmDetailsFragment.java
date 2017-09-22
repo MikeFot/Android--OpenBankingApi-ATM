@@ -75,10 +75,7 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
         final String latitude = atmDetails.getLocationLatitude();
         final String longitude = atmDetails.getLocationLongitude();
         if (TextUtils.isNotEmpty(latitude) && TextUtils.isNotEmpty(longitude)) {
-
             final String placeholder = "geo:%s,%s?q=%s,%s (%s)";
-
-
             final String uri = String.format(Locale.ENGLISH, placeholder, latitude, longitude, latitude, longitude, getAtmDetailsArgument().getLabel());
             final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(intent);

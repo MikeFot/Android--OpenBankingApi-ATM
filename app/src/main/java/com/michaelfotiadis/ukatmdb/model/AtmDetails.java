@@ -3,6 +3,7 @@ package com.michaelfotiadis.ukatmdb.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.michaelfotiadis.ukatmdb.network.model.Address;
 import com.michaelfotiadis.ukatmdb.network.model.Datum;
@@ -139,6 +140,28 @@ public class AtmDetails implements Parcelable {
         return label;
     }
 
+    @Nullable
+    public Double getLatitudeAsDouble() {
+        // quick and dirty
+        try {
+            return Double.parseDouble(mLocationLatitude);
+        } catch (final Exception e) {
+            return null;
+
+        }
+    }
+
+    @Nullable
+    public Double getLongitudeAsDouble() {
+        // quick and dirty
+        try {
+            return Double.parseDouble(mLocationLongitude);
+        } catch (final Exception e) {
+            return null;
+
+        }
+    }
+
 
     public List<String> getAccessibilityTypes() {
         return mAccessibilityTypes;
@@ -247,7 +270,7 @@ public class AtmDetails implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeStringList(this.mAccessibilityTypes);
         dest.writeStringList(this.mAdditionalATMServices);
         dest.writeString(this.mAtmId);
@@ -275,7 +298,7 @@ public class AtmDetails implements Parcelable {
         dest.writeString(this.mOrganisationLegalName);
     }
 
-    protected AtmDetails(Parcel in) {
+    protected AtmDetails(final Parcel in) {
         this.mAccessibilityTypes = in.createStringArrayList();
         this.mAdditionalATMServices = in.createStringArrayList();
         this.mAtmId = in.readString();
@@ -305,12 +328,12 @@ public class AtmDetails implements Parcelable {
 
     public static final Creator<AtmDetails> CREATOR = new Creator<AtmDetails>() {
         @Override
-        public AtmDetails createFromParcel(Parcel source) {
+        public AtmDetails createFromParcel(final Parcel source) {
             return new AtmDetails(source);
         }
 
         @Override
-        public AtmDetails[] newArray(int size) {
+        public AtmDetails[] newArray(final int size) {
             return new AtmDetails[size];
         }
     };
