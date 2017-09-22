@@ -2,9 +2,7 @@
 Android app using OpenBankingApi and RX
 
 ## Data
-Using Open banking API to query UK ATM data
-
-[Link here](https://www.openbanking.org.uk/open-data-apis)
+Using [Open banking API](https://www.openbanking.org.uk/open-data-apis) to query UK ATM data
 
 ## App Info
 - Data loading using [Retrofit2](https://github.com/square/retrofit) RX observables
