@@ -1,5 +1,6 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
@@ -26,6 +27,8 @@ public class AtmRecyclerContentUpdater {
 
     private final RecyclerView mRecyclerView;
     private final RecyclerManager<AtmDetails> mRecyclerManager;
+    private final RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     public AtmRecyclerContentUpdater(final RecyclerManager<AtmDetails> recyclerManager,
                                      final RecyclerView recyclerView,
@@ -36,13 +39,9 @@ public class AtmRecyclerContentUpdater {
         mListOfLists = new ArrayList<>();
 
         mRecyclerView = recyclerView;
+        mLayoutManager = layoutManager;
 
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(final int page) {
-                addPage(page);
-            }
-        });
+
 
     }
 
@@ -59,20 +58,17 @@ public class AtmRecyclerContentUpdater {
             /*
              *  post this on the view's thread to avoid a {@link java.util.ConcurrentModificationException}
              */
-            mRecyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    final int index = 0; // always use the first index
+            mRecyclerView.post(() -> {
+                final int index = 0; // always use the first index
 
-                    mRecyclerManager.addItems(mListOfLists.get(index));
-                    mListOfLists.remove(index);
-                    log(String.format(
-                            Locale.UK,
-                            "On Load More page %d : Recycler now has %d items and we still have %d chunks to add",
-                            page,
-                            mRecyclerManager.getItemCount(),
-                            mListOfLists.size()));
-                }
+                mRecyclerManager.addItems(mListOfLists.get(index));
+                mListOfLists.remove(index);
+                log(String.format(
+                        Locale.UK,
+                        "On Load More page %d : Recycler now has %d items and we still have %d chunks to add",
+                        page,
+                        mRecyclerManager.getItemCount(),
+                        mListOfLists.size()));
             });
         }
     }
@@ -97,13 +93,28 @@ public class AtmRecyclerContentUpdater {
                 mListOfLists.remove(0);
             }
 
+            if (mOnScrollListener != null) {
+                mRecyclerView.removeOnScrollListener(mOnScrollListener);
+            }
+            mOnScrollListener = getListener();
+            mRecyclerView.addOnScrollListener(mOnScrollListener);
 
             mRecyclerManager.updateUiState();
-            log("Adapter now has " + mRecyclerManager.getItemCount() + " items");
+            log("Adapter now has " + mRecyclerManager.getItemCount() + " items and " + mPendingItems.size() + " pending items");
         } else {
             log("Got the same number of items - will not update recycler items");
         }
 
+    }
+
+    @NonNull
+    private EndlessRecyclerOnScrollListener getListener() {
+        return new EndlessRecyclerOnScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(final int page) {
+                addPage(page);
+            }
+        };
     }
 
     private static void log(final String message) {

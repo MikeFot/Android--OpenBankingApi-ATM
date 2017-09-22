@@ -153,6 +153,8 @@ dependencies {
     // Alex's resource mirror
     compile 'uk.co.alt236:resource-mirror-android:1.0.0'
 
+    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.3'
     testCompile 'junit:junit:4.12'

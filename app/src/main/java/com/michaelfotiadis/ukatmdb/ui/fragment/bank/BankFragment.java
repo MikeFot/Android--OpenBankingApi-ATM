@@ -1,7 +1,6 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.bank;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,14 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.michaelfotiadis.ukatmdb.R;
-import com.michaelfotiadis.ukatmdb.network.Bank;
-import com.michaelfotiadis.ukatmdb.preferences.UserPreferences;
 import com.michaelfotiadis.ukatmdb.ui.activity.main.MainView;
 import com.michaelfotiadis.ukatmdb.ui.fragment.bank.model.UiBank;
 import com.michaelfotiadis.ukatmdb.ui.fragment.bank.recycler.BankRecyclerAdapter;
 import com.michaelfotiadis.ukbankatm.ui.activity.BaseActivity;
 import com.michaelfotiadis.ukbankatm.ui.fragment.BaseRecyclerFragment;
-import com.michaelfotiadis.ukbankatm.ui.recyclerview.listener.OnItemSelectedListener;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.manager.RecyclerManager;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.manager.State;
 import com.michaelfotiadis.ukbankatm.ui.viewmanagement.SimpleUiStateKeeper;
@@ -68,12 +64,9 @@ public class BankFragment extends BaseRecyclerFragment<UiBank> implements BankVi
 
         final BankRecyclerAdapter adapter = new BankRecyclerAdapter(
                 getActivity(),
-                new OnItemSelectedListener<UiBank>() {
-                    @Override
-                    public void onListItemSelected(final View view, final UiBank item) {
-                        if (getActivity() instanceof MainView) {
-                            ((MainView) getActivity()).showBankScreen(item.getBank());
-                        }
+                (itemView, item) -> {
+                    if (getActivity() instanceof MainView) {
+                        ((MainView) getActivity()).showBankScreen(item.getBank());
                     }
                 });
         mRecyclerManager = new RecyclerManager.Builder<>(adapter)

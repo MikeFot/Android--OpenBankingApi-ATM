@@ -34,10 +34,10 @@ public final class TextUtils {
     }
 
     public static String padLeftWithChar(@NonNull final String content,
-                                         char chr,
+                                         final char chr,
                                          final int digits) {
         String zeroes = "";
-        String chrAsString = String.valueOf(chr);
+        final String chrAsString = String.valueOf(chr);
         int j = 0;
         while (j < digits) {
             zeroes += chrAsString;
@@ -60,4 +60,6 @@ public final class TextUtils {
         }
         return formattedDesc.trim();
     }
+
+
 }
