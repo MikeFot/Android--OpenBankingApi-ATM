@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class BankPresenter {
@@ -39,12 +38,7 @@ public class BankPresenter {
 
         mSingle.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<UiBank>>() {
-                    @Override
-                    public void accept(final List<UiBank> uiBanks) throws Exception {
-                        mView.showContent(uiBanks);
-                    }
-                });
+                .subscribe(mView::showContent);
 
     }
 }

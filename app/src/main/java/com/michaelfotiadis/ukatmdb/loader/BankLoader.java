@@ -13,10 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class BankLoader {
@@ -33,27 +30,25 @@ public class BankLoader {
 
         return getBanks()
                 .subscribeOn(Schedulers.io())
-                .map(new Function<List<Bank>, List<UiBank>>() {
-                    @Override
-                    public List<UiBank> apply(@NonNull final List<Bank> banks) throws Exception {
+                .map(this::convertBanks);
 
-                        final List<UiBank> uiBanks = new ArrayList<>();
+    }
 
-                        for (final Bank bank : banks) {
+    @NonNull
+    private List<UiBank> convertBanks(final List<Bank> banks) {
+        final List<UiBank> uiBanks = new ArrayList<>();
 
-                            final String name = getNameForBank(bank, mResources);
+        for (final Bank bank : banks) {
 
-                            if (TextUtils.isNotEmpty(name)) {
-                                uiBanks.add(new UiBank(name, bank));
-                            }
+            final String name = getNameForBank(bank, mResources);
 
-                        }
+            if (TextUtils.isNotEmpty(name)) {
+                uiBanks.add(new UiBank(name, bank));
+            }
 
-                        return uiBanks;
-                    }
-                });
+        }
 
-
+        return uiBanks;
     }
 
     @Nullable
@@ -61,7 +56,11 @@ public class BankLoader {
         final String name;
         switch (bank) {
             case BANK_OF_IRELAND:
-                name = resources.getString(R.string.bank_of_ireland);
+                /*
+                 * SKIP BAI because of invalid certificate
+                 */
+                name = null;
+                //name = resources.getString(R.string.bank_of_ireland);
                 break;
             case BANK_OF_SCOTLAND:
                 name = resources.getString(R.string.bank_of_scotland);
@@ -80,6 +79,9 @@ public class BankLoader {
                 break;
             case HSBC:
                 name = resources.getString(R.string.hsbc);
+                break;
+            case LLOYDS:
+                name = resources.getString(R.string.lloyds);
                 break;
             case NATIONWIDE:
                 name = resources.getString(R.string.nationwide);
@@ -102,13 +104,9 @@ public class BankLoader {
         return name;
     }
 
+    @SuppressWarnings("MethodMayBeStatic")
     private Single<List<Bank>> getBanks() {
-        return Single.create(new SingleOnSubscribe<List<Bank>>() {
-            @Override
-            public void subscribe(@NonNull final SingleEmitter<List<Bank>> e) throws Exception {
-                e.onSuccess(Arrays.asList(Bank.values()));
-            }
-        });
+        return Single.create(e -> e.onSuccess(Arrays.asList(Bank.values())));
     }
 
 

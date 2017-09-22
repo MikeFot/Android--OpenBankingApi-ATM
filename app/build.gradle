@@ -7,8 +7,15 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.24.1'
     }
 }
+
+plugins {
+    id "me.tatarka.retrolambda" version "3.7.0"
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+
+
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -70,6 +77,11 @@ android {
             }
         }
 
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     signingConfigs {

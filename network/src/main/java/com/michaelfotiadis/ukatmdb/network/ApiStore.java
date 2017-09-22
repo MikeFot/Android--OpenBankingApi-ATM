@@ -12,6 +12,7 @@ public class ApiStore {
     private static final String ENDPOINT_FIRST_TRUST = "https://api.firsttrustbank.co.uk/open-banking/v1.2/";
     private static final String ENDPOINT_HALIFAX = "https://api.halifax.co.uk/open-banking/v1.2/";
     private static final String ENDPOINT_HSBC = "https://api.hsbc.com/open-banking/v1.2/";
+    private static final String ENDPOINT_LLOYDS = "https://api.lloydsbank.com/open-banking/v1.2/";
     private static final String ENDPOINT_NATIONWIDE = "https://openapi.nationwide.co.uk/open-banking/v1.2/";
     private static final String ENDPOINT_NATWEST = "https://openapi.natwest.com/open-banking/v1.3/";
     private static final String ENDPOINT_ROYAL_BANK_OF_SCOTLAND = "https://openapi.rbs.co.uk/open-banking/v1.3/";
@@ -30,6 +31,7 @@ public class ApiStore {
         apiMap.put(Bank.FIRST_TRUST, ENDPOINT_FIRST_TRUST);
         apiMap.put(Bank.HALIFAX, ENDPOINT_HALIFAX);
         apiMap.put(Bank.HSBC, ENDPOINT_HSBC);
+        apiMap.put(Bank.LLOYDS, ENDPOINT_LLOYDS);
         apiMap.put(Bank.NATIONWIDE, ENDPOINT_NATIONWIDE);
         apiMap.put(Bank.NATWEST, ENDPOINT_NATWEST);
         apiMap.put(Bank.ROYAL_BANK_OF_SCOTLAND, ENDPOINT_ROYAL_BANK_OF_SCOTLAND);

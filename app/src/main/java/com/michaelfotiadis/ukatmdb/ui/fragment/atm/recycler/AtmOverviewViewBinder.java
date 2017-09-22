@@ -1,11 +1,11 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.view.View;
 
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
+import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.listener.OnItemSelectedListener;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerViewBinder;
 
@@ -29,29 +29,38 @@ public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewVie
         holder.getRoot().setTag(null);
 
 
-
-        if (item.getLabel() != null) {
-            holder.mTitle.setText(item.getLabel());
+        if (TextUtils.isNotEmpty(item.getAddressTownName())) {
+            holder.title.setText(item.getAddressTownName());
+        } else if (TextUtils.isNotEmpty(item.getSiteName())) {
+            holder.title.setText(item.getSiteName());
+        } else {
+            showView(holder.title, false);
         }
 
-        if (item.getAtmId() != null) {
-            holder.mLeagueId.setText(String.valueOf(item.getAtmId()));
+        if (TextUtils.isNotEmpty(item.getAddressStreetName())) {
+            holder.street.setText(item.getAddressStreetName());
+        } else {
+            showView(holder.street, false);
         }
 
-        if (item.getLocationCategory() != null) {
-            holder.mSummary.setText(item.getLocationCategory());
+        if (TextUtils.isNotEmpty(item.getAddressPostCode())) {
+            holder.postcode.setText(String.format(getString(R.string.placeholder_postcode), item.getAddressPostCode()));
+        } else {
+            showView(holder.postcode, false);
         }
 
-        if (item.getAddressPostCode() != null) {
-            holder.mLeaguerUrl.setText(item.getAddressPostCode());
+        if (TextUtils.isNotEmpty(item.getLocationCategory())) {
+            final String summary = TextUtils.splitAtCapitals(item.getLocationCategory());
+            holder.summary.setText(getContext().getString(R.string.placeholder_location_type, summary));
+        } else {
+            showView(holder.summary, false);
         }
-
 
         holder.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
-                holder.mTitle.setTag(getString(R.string.tag_bank_name));
+                holder.title.setTag(getString(R.string.tag_bank_name));
 
                 mListener.onListItemSelected(v, item);
             }

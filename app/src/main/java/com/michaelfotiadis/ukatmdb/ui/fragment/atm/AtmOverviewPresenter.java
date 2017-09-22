@@ -16,13 +16,12 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class AtmOverviewPresenter {
 
-    private Single<AtmResponse> mObservable;
+    private Single<AtmResponse> mSingle;
     private final AtmOverviewView mView;
     private final Bank mBank;
     private final DisposableSingleObserver<List<AtmDetails>> mDisposable;
@@ -39,13 +38,13 @@ public class AtmOverviewPresenter {
 
         mDisposable = new DisposableSingleObserver<List<AtmDetails>>() {
             @Override
-            public void onSuccess(@NonNull List<AtmDetails> details) {
+            public void onSuccess(@NonNull final List<AtmDetails> details) {
                 AppLog.d("Received " + details.size() + " details");
                 mView.showContent(details);
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError(@NonNull final Throwable e) {
                 mView.showError(e);
             }
         };
@@ -54,32 +53,32 @@ public class AtmOverviewPresenter {
 
     protected void loadData() {
 
-        mObservable.subscribeOn(Schedulers.io())
+        mSingle.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .cache()
-                .map(new Function<AtmResponse, List<AtmDetails>>() {
-                    @Override
-                    public List<AtmDetails> apply(@NonNull final AtmResponse atmResponse) throws Exception {
-                        final List<AtmDetails> details = new ArrayList<>();
-
-                        for (final Datum datum : atmResponse.getData()) {
-                            details.add(new AtmDetails(datum));
-                        }
-
-                        return details;
-                    }
-                })
+                .map(this::convertDetails)
                 .subscribe(mDisposable);
 
     }
 
+    @NonNull
+    private List<AtmDetails> convertDetails(final AtmResponse atmResponse) {
+        final List<AtmDetails> details = new ArrayList<>();
+
+        for (final Datum datum : atmResponse.getData()) {
+            details.add(new AtmDetails(datum));
+        }
+
+        return details;
+    }
+
     protected void onStart() {
-        mObservable = mNetworkLoader.getForBank(mBank);
+        mSingle = mNetworkLoader.getForBank(mBank);
     }
 
     protected void onStop() {
         mDisposable.dispose();
-        mObservable.unsubscribeOn(AndroidSchedulers.mainThread());
+        mSingle.unsubscribeOn(AndroidSchedulers.mainThread());
     }
 
 }

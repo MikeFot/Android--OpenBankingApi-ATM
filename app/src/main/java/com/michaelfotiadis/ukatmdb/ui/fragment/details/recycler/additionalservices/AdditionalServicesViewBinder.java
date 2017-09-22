@@ -3,6 +3,7 @@ package com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.additionalservi
 import android.content.Context;
 
 import com.michaelfotiadis.ukatmdb.R;
+import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerViewBinder;
 import com.michaelfotiadis.ukbankatm.ui.utils.ViewUtils;
 
@@ -32,17 +33,8 @@ public class AdditionalServicesViewBinder extends BaseRecyclerViewBinder<Additio
             holder.description.setText(item.getDescription());
         } else {
 
-            final String placeholder = getString(R.string.bullet_placeholder);
-
-            final String[] split = item.getDescription().split("(?=\\p{Lu})");
-            String formattedDesc = "";
-            for (final String s : split) {
-                formattedDesc += s;
-                formattedDesc += " ";
-            }
-            formattedDesc = formattedDesc.trim();
-
-            final String desc = String.format(placeholder, formattedDesc);
+            final String desc = getContext().getString(R.string.bullet_placeholder,
+                    TextUtils.splitAtCapitals(item.getDescription()));
             holder.description.setText(desc);
         }
 
