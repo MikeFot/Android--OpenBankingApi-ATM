@@ -58,7 +58,7 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [fabric_key: FABRIC_KEY]
+        manifestPlaceholders = [fabric_key: FABRIC_KEY, google_maps_key: GOOGLE_MAPS_API_KEY]
 
         applicationVariants.all { variant ->
             variant.productFlavors.each { flavor ->
@@ -139,6 +139,9 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+
+    compile "com.google.android.gms:play-services-maps:11.4.0"
+    compile "com.google.android.gms:play-services-location:11.4.0"
 
     // dependency injection
     compile "com.google.dagger:dagger:$daggerVersion"

@@ -1,8 +1,6 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,14 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
-import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.activity.BaseActivity;
 import com.michaelfotiadis.ukbankatm.ui.fragment.BaseFragment;
-import com.michaelfotiadis.ukbankatm.ui.toast.AppToast;
-
-import java.util.Locale;
 
 import butterknife.ButterKnife;
 
@@ -57,7 +52,7 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
         switch (item.getItemId()) {
             case R.id.action_map:
 
-                showOnMap();
+                mRecyclerController.showOnMap();
 
                 return true;
             default:
@@ -67,24 +62,7 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
 
     }
 
-    private void showOnMap() {
 
-        final AtmDetails atmDetails = getAtmDetailsArgument();
-
-
-        final String latitude = atmDetails.getLocationLatitude();
-        final String longitude = atmDetails.getLocationLongitude();
-        if (TextUtils.isNotEmpty(latitude) && TextUtils.isNotEmpty(longitude)) {
-            final String placeholder = "geo:%s,%s?q=%s,%s (%s)";
-            final String uri = String.format(Locale.ENGLISH, placeholder, latitude, longitude, latitude, longitude, getAtmDetailsArgument().getLabel());
-            final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            startActivity(intent);
-        } else {
-            AppToast.show(getContext(), getString(R.string.message_invalid_location_data));
-        }
-
-
-    }
 
 
     private AtmDetails getAtmDetailsArgument() {
@@ -107,6 +85,9 @@ public class AtmDetailsFragment extends BaseFragment implements AtmDetailsView {
 
         mRecyclerController = new ServicesRecyclerController(view);
 
+
+        final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(googleMap -> mRecyclerController.setMap(googleMap));
     }
 
 

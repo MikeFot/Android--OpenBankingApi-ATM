@@ -28,23 +28,41 @@ public class UiAtmDetailsFactory {
 
         final List<String> items = new ArrayList<>();
 
-        if (TextUtils.isNotEmpty(atmDetails.getAddressBuildingNumberOrName())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_building_number), atmDetails.getAddressBuildingNumberOrName()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressStreetName())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_street_name), atmDetails.getAddressStreetName()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressTownName())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_town), atmDetails.getAddressTownName()));
-        }
-        if (TextUtils.isNotEmpty(atmDetails.getAddressPostCode())) {
-            items.add(String.format(resources.getString(R.string.placeholder_address_postcode), atmDetails.getAddressPostCode()));
+        final StringBuilder sb = getAddressField(atmDetails);
+        final String address = sb.toString().trim();
+
+        if (TextUtils.isNotEmpty(address)) {
+            items.add(address);
         }
 
         if (TextUtils.isNotEmpty(atmDetails.getMinimumValueDispensed())) {
             items.add(String.format(resources.getString(R.string.placeholder_minimum_value), atmDetails.getMinimumValueDispensed()));
         }
         return items;
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    @NonNull
+    private StringBuilder getAddressField(final AtmDetails atmDetails) {
+        final StringBuilder sb = new StringBuilder();
+
+        if (TextUtils.isNotEmpty(atmDetails.getAddressBuildingNumberOrName())) {
+            sb.append(atmDetails.getAddressBuildingNumberOrName());
+            sb.append("\n");
+        }
+        if (TextUtils.isNotEmpty(atmDetails.getAddressStreetName())) {
+            sb.append(atmDetails.getAddressStreetName());
+            sb.append("\n");
+        }
+        if (TextUtils.isNotEmpty(atmDetails.getAddressTownName())) {
+            sb.append(atmDetails.getAddressTownName());
+            sb.append("\n");
+        }
+        if (TextUtils.isNotEmpty(atmDetails.getAddressPostCode())) {
+            sb.append(atmDetails.getAddressPostCode());
+            sb.append("\n");
+        }
+        return sb;
     }
 
 
@@ -63,8 +81,9 @@ public class UiAtmDetailsFactory {
         return additionalServices;
     }
 
+    @SuppressWarnings("MethodMayBeStatic")
     @NonNull
-    public List<AdditionalServices> getCountryServices(List<String> services) {
+    public List<AdditionalServices> getCountryServices(final List<String> services) {
         final List<AdditionalServices> additionalServices = new ArrayList<>();
 
         if (ListUtils.isListNotNullOrEmpty(services)) {

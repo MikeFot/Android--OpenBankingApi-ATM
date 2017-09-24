@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+
     <application
         android:name=".AtmApplication"
         android:allowBackup="true"
@@ -26,6 +27,14 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="${fabric_key}" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${google_maps_key}" />
+
+        <uses-library android:name="com.google.android.maps" />
     </application>
 
 

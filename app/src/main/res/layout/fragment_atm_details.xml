@@ -13,8 +13,8 @@
             style="@style/AppTheme.TextView.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="General Info"
-            android:textColor="@color/primary_dark" />
+            android:text="@string/general_info"
+            android:textColor="@color/accent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_info"
@@ -23,17 +23,19 @@
             android:layout_marginBottom="@dimen/margin_4dp"
             android:layout_marginTop="@dimen/margin_4dp" />
 
-        <View
+        <fragment
+
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/accent" />
+            android:layout_height="150dp" />
 
         <TextView
             style="@style/AppTheme.TextView.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ATM Services"
-            android:textColor="@color/primary_dark" />
+            android:textColor="@color/accent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_services"
@@ -42,17 +44,12 @@
             android:layout_marginBottom="@dimen/margin_4dp"
             android:layout_marginTop="@dimen/margin_4dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/accent" />
-
         <TextView
             style="@style/AppTheme.TextView.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Additional Services"
-            android:textColor="@color/primary_dark" />
+            android:text="@string/additional_services"
+            android:textColor="@color/accent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_additonal_services"
@@ -61,17 +58,12 @@
             android:layout_marginBottom="@dimen/margin_4dp"
             android:layout_marginTop="@dimen/margin_4dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/accent" />
-
         <TextView
             style="@style/AppTheme.TextView.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Accessibility Types"
-            android:textColor="@color/primary_dark" />
+            android:text="@string/accessibility_types"
+            android:textColor="@color/accent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_accessibility_types"
@@ -80,16 +72,11 @@
             android:layout_marginBottom="@dimen/margin_4dp"
             android:layout_marginTop="@dimen/margin_4dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/accent" />
-
         <TextView
             style="@style/AppTheme.TextView.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Currency"
+            android:text="@string/currency"
             android:textColor="@color/primary_dark" />
 
         <android.support.v7.widget.RecyclerView
@@ -99,17 +86,12 @@
             android:layout_marginBottom="@dimen/margin_4dp"
             android:layout_marginTop="@dimen/margin_4dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/accent" />
-
         <TextView
             style="@style/AppTheme.TextView.Info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Supported Languages"
-            android:textColor="@color/primary_dark" />
+            android:text="@string/supported_languages"
+            android:textColor="@color/accent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_languages"

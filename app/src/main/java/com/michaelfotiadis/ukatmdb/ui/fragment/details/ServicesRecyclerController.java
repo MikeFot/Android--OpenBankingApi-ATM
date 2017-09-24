@@ -1,11 +1,17 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 import com.michaelfotiadis.ukatmdb.ui.fragment.details.factory.UiAtmDetailsFactory;
@@ -14,9 +20,11 @@ import com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.additionalservic
 import com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.generalinfo.GeneralInfoRecyclerAdapter;
 import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.manager.RecyclerManager;
+import com.michaelfotiadis.ukbankatm.ui.toast.AppToast;
 import com.michaelfotiadis.ukbankatm.ui.utils.ViewUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +34,8 @@ import butterknife.ButterKnife;
  */
 public class ServicesRecyclerController {
 
+    private final UiAtmDetailsFactory factory;
+    private final View rootView;
     @BindView(R.id.recycler_info)
     RecyclerView infoRecycler;
     @BindView(R.id.recycler_services)
@@ -41,18 +51,19 @@ public class ServicesRecyclerController {
     @BindView(R.id.label)
     TextView labelView;
 
+
     private RecyclerManager<String> mInfoManager;
     private RecyclerManager<AdditionalServices> mServicesManager;
     private RecyclerManager<AdditionalServices> mAdditionalServicesManager;
     private RecyclerManager<AdditionalServices> mAccessibilityManager;
     private RecyclerManager<AdditionalServices> mCurrencyManager;
     private RecyclerManager<AdditionalServices> mLanguagesManager;
-
-    private final UiAtmDetailsFactory factory;
+    private GoogleMap map;
+    private AtmDetails atmDetails;
 
     ServicesRecyclerController(final View view) {
         ButterKnife.bind(this, view);
-
+        this.rootView = view;
 
         factory = new UiAtmDetailsFactory(view.getResources());
 
@@ -66,6 +77,8 @@ public class ServicesRecyclerController {
     }
 
     protected void setData(final AtmDetails atmDetails) {
+
+        this.atmDetails = atmDetails;
 
         final String label;
         if (TextUtils.isNotEmpty(atmDetails.getLabel())) {
@@ -92,6 +105,41 @@ public class ServicesRecyclerController {
         setServices(atmDetails.getAccessibilityTypes(), accessibilityRecycler, mAccessibilityManager);
         setServices(atmDetails.getCurrency(), currencyRecycler, mCurrencyManager);
         setCountryServices(atmDetails.getSupportedLanguages(), languagesRecycler, mLanguagesManager);
+
+        showInternalMapView(atmDetails.getLatitudeAsDouble(), atmDetails.getLongitudeAsDouble(), atmDetails.getLabel());
+
+    }
+
+    void showOnMap() {
+
+        if (atmDetails != null) {
+            final String latitude = atmDetails.getLocationLatitude();
+            final String longitude = atmDetails.getLocationLongitude();
+            if (TextUtils.isNotEmpty(latitude) && TextUtils.isNotEmpty(longitude)) {
+                final String placeholder = "geo:%s,%s?q=%s,%s (%s)";
+                final String uri = String.format(Locale.ENGLISH, placeholder, latitude, longitude, latitude, longitude, atmDetails.getLabel());
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                rootView.getContext().startActivity(intent);
+            } else {
+                AppToast.show(rootView.getContext(), rootView.getContext().getString(R.string.message_invalid_location_data));
+            }
+        }
+
+
+    }
+
+    private void showInternalMapView(final Double lat, final Double lon, final String label) {
+
+        if (map != null && lat != null && lon != null) {
+            final LatLng atm = new LatLng(lat, lon);
+            map.addMarker(new MarkerOptions().position(atm)
+                    .title(label));
+            map.setIndoorEnabled(true);
+            map.setBuildingsEnabled(true);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(atm, 16.0f));
+            map.getUiSettings().setAllGesturesEnabled(false);
+            map.setOnMapClickListener(latLng -> showOnMap());
+        }
 
     }
 
@@ -207,4 +255,10 @@ public class ServicesRecyclerController {
         mLanguagesManager.updateUiState();
     }
 
+    public void setMap(final GoogleMap map) {
+        this.map = map;
+        if (atmDetails != null) {
+            showInternalMapView(atmDetails.getLatitudeAsDouble(), atmDetails.getLongitudeAsDouble(), atmDetails.getLabel());
+        }
+    }
 }

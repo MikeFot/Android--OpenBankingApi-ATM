@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parent_layout"
+    style="@style/AppTheme.CardViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_grey_100"
-    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="@dimen/margin_4dp"
+    android:layout_marginLeft="@dimen/margin_8dp"
+    android:layout_marginRight="@dimen/margin_8dp"
+    android:layout_marginTop="@dimen/margin_4dp"
+    app:cardBackgroundColor="@color/md_grey_50"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="@dimen/padding_8dp"
     tools:ignore="RtlHardcoded">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/AppTheme.TextView.Info"
+
+    <LinearLayout
+        android:id="@+id/parent_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_dark"
-        android:textSize="@dimen/text_large"
-        tools:text="Royal Bank of Scotland" />
+        android:orientation="vertical"
+        tools:ignore="RtlHardcoded">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/accent" />
+        <TextView
+            android:id="@+id/title"
+            style="@style/AppTheme.TextView.Info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large"
+            tools:text="Royal Bank of Scotland" />
 
-</LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

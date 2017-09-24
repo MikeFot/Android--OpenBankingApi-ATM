@@ -38,5 +38,10 @@
     <string name="placeholder_location_type">Location Type: %s</string>
     <string name="error_no_permission">We are sorry but we cannot use location services without your permission</string>
     <string name="menu_item_find_nearest">Find nearest</string>
+    <string name="general_info">General Info</string>
+    <string name="additional_services">Additional Services</string>
+    <string name="accessibility_types">Accessibility Types</string>
+    <string name="currency">Currency</string>
+    <string name="supported_languages">Supported Languages</string>
 
 </resources>

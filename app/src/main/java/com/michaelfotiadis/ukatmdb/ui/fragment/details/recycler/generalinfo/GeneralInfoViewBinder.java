@@ -1,7 +1,6 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.generalinfo;
 
 import android.content.Context;
-import android.text.Html;
 
 import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerViewBinder;
@@ -22,7 +21,7 @@ public class GeneralInfoViewBinder extends BaseRecyclerViewBinder<GeneralInfoVie
     protected void setData(final GeneralInfoViewHolder holder, final String item) {
 
         if (TextUtils.isNotEmpty(item)) {
-            holder.content.setText(Html.fromHtml(item));
+            holder.content.setText(item);
             showView(holder.content, true);
         } else {
             showView(holder.content, false);

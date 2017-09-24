@@ -50,7 +50,7 @@ public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewVie
         }
 
         if (TextUtils.isNotEmpty(item.getLocationCategory())) {
-            final String summary = TextUtils.splitAtCapitals(item.getLocationCategory());
+            final String summary = TextUtils.splitCamelCase(item.getLocationCategory());
             holder.summary.setText(getContext().getString(R.string.placeholder_location_type, summary));
         } else {
             showView(holder.summary, false);

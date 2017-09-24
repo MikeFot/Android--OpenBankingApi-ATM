@@ -11,7 +11,7 @@
     android:layout_marginLeft="@dimen/margin_8dp"
     android:layout_marginRight="@dimen/margin_8dp"
     android:layout_marginTop="@dimen/margin_4dp"
-    app:cardBackgroundColor="@color/md_grey_100"
+    app:cardBackgroundColor="@color/md_grey_50"
     app:cardUseCompatPadding="true"
     app:contentPadding="@dimen/padding_8dp"
     tools:ignore="RtlHardcoded">

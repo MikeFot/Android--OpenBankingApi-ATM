@@ -51,14 +51,15 @@ public final class TextUtils {
         return content.substring(0, Math.min(expectedLength, content.length()));
     }
 
-    public static String splitAtCapitals(@NonNull final String content) {
-        final String[] split = content.split("(?=\\p{Lu})");
-        String formattedDesc = "";
-        for (final String s : split) {
-            formattedDesc += s;
-            formattedDesc += " ";
-        }
-        return formattedDesc.trim();
+    public static String splitCamelCase(@NonNull final String text) {
+        return text.replaceAll(
+                String.format("%s|%s|%s",
+                        "(?<=[A-Z])(?=[A-Z][a-z])",
+                        "(?<=[^A-Z])(?=[A-Z])",
+                        "(?<=[A-Za-z])(?=[^A-Za-z])"
+                ),
+                " "
+        );
     }
 
 

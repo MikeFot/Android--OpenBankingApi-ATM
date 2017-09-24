@@ -402,7 +402,7 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
     }
 
     private void filterItems(final String query) {
-
+        // move filtering to RX observable
         if (mItems != null) {
             if (TextUtils.isEmpty(query)) {
                 AppLog.d("Resetting adapter");

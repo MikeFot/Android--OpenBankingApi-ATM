@@ -34,7 +34,7 @@ public class AdditionalServicesViewBinder extends BaseRecyclerViewBinder<Additio
         } else {
 
             final String desc = getContext().getString(R.string.bullet_placeholder,
-                    TextUtils.splitAtCapitals(item.getDescription()));
+                    TextUtils.splitCamelCase(item.getDescription()));
             holder.description.setText(desc);
         }
 
