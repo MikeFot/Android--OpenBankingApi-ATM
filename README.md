@@ -13,6 +13,7 @@ Using [OpenBankingAPI](https://www.openbanking.org.uk/open-data-apis) to query U
 - Dependency injection with [Dagger2](https://github.com/google/dagger)
 - View injection with [Butterknife](https://github.com/JakeWharton/butterknife)
 
+
 ## Play Store
-<a href='https://play.google.com/store/apps/details?id=com.michaelfotiadis.com.michaelfotiadis.ukatmdb&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
+<a href='https://play.google.com/store/apps/details?id=com.michaelfotiadis.ukatmdb&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
 
