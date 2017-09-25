@@ -34,7 +34,7 @@
     <string name="placeholder_address_postcode">Postcode: %s</string>
     <string name="placeholder_minimum_value">Minimum Value Dispensed: %s</string>
     <string name="placeholder_currency">Currency: %s</string>
-    <string name="placeholder_postcode">Postcode: :%s</string>
+    <string name="placeholder_postcode">Postcode: %s</string>
     <string name="placeholder_location_type">Location Type: %s</string>
     <string name="error_no_permission">We are sorry but we cannot use location services without your permission</string>
     <string name="menu_item_find_nearest">Find nearest</string>
@@ -43,5 +43,7 @@
     <string name="accessibility_types">Accessibility Types</string>
     <string name="currency">Currency</string>
     <string name="supported_languages">Supported Languages</string>
+    <string name="toast_sorted">Sorted by nearest</string>
+    <string name="toast_finding_nearest">Finding nearest cash points</string>
 
 </resources>

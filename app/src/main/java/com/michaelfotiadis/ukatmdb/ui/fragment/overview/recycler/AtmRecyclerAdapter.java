@@ -1,4 +1,4 @@
-package com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler;
+package com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler;
 
 import android.content.Context;
 import android.view.LayoutInflater;

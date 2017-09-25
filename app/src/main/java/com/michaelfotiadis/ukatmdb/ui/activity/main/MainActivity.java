@@ -9,9 +9,9 @@ import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 import com.michaelfotiadis.ukatmdb.network.Bank;
 import com.michaelfotiadis.ukatmdb.preferences.UserPreferences;
-import com.michaelfotiadis.ukatmdb.ui.fragment.atm.AtmOverviewFragment;
 import com.michaelfotiadis.ukatmdb.ui.fragment.bank.BankFragment;
 import com.michaelfotiadis.ukatmdb.ui.fragment.details.AtmDetailsFragment;
+import com.michaelfotiadis.ukatmdb.ui.fragment.overview.AtmOverviewFragment;
 import com.michaelfotiadis.ukbankatm.ui.activity.BaseActivity;
 
 import butterknife.BindView;

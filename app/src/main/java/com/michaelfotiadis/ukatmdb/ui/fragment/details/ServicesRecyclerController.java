@@ -1,7 +1,10 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +53,8 @@ public class ServicesRecyclerController {
     RecyclerView languagesRecycler;
     @BindView(R.id.label)
     TextView labelView;
+    @BindView(R.id.map_container)
+    View mapContainer;
 
 
     private RecyclerManager<String> mInfoManager;
@@ -66,6 +71,8 @@ public class ServicesRecyclerController {
         this.rootView = view;
 
         factory = new UiAtmDetailsFactory(view.getResources());
+
+        ViewUtils.showView(mapContainer, false);
 
         initInfoRecycler(view);
         initServicesRecycler(view);
@@ -138,6 +145,10 @@ public class ServicesRecyclerController {
             map.setBuildingsEnabled(true);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(atm, 16.0f));
             map.getUiSettings().setAllGesturesEnabled(false);
+            if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                map.setMyLocationEnabled(true);
+            }
+
             map.setOnMapClickListener(latLng -> showOnMap());
         }
 
@@ -257,6 +268,9 @@ public class ServicesRecyclerController {
 
     public void setMap(final GoogleMap map) {
         this.map = map;
+
+        ViewUtils.showViewAnimated(this.mapContainer, true);
+
         if (atmDetails != null) {
             showInternalMapView(atmDetails.getLatitudeAsDouble(), atmDetails.getLongitudeAsDouble(), atmDetails.getLabel());
         }

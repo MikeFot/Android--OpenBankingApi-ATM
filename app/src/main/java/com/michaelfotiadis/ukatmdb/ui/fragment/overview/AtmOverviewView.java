@@ -1,4 +1,4 @@
-package com.michaelfotiadis.ukatmdb.ui.fragment.atm;
+package com.michaelfotiadis.ukatmdb.ui.fragment.overview;
 
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 

@@ -1,4 +1,4 @@
-package com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler;
+package com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;

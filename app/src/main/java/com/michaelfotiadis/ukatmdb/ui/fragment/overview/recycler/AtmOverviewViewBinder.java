@@ -1,26 +1,27 @@
-package com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler;
+package com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler;
 
 import android.content.Context;
-import android.view.View;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.michaelfotiadis.ukatmdb.R;
 import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.listener.OnItemSelectedListener;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerViewBinder;
 
+import java.util.concurrent.TimeUnit;
+
 public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewViewHolder, AtmDetails> {
 
-    private final OnItemSelectedListener<AtmDetails> mListener;
+    private final OnItemSelectedListener<AtmDetails> listener;
 
     protected AtmOverviewViewBinder(final Context context, final OnItemSelectedListener<AtmDetails> listener) {
         super(context);
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
     protected void reset(final AtmOverviewViewHolder holder) {
-
     }
 
     @Override
@@ -44,7 +45,7 @@ public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewVie
         }
 
         if (TextUtils.isNotEmpty(item.getAddressPostCode())) {
-            holder.postcode.setText(String.format(getString(R.string.placeholder_postcode), item.getAddressPostCode()));
+            holder.postcode.setText(item.getAddressPostCode());
         } else {
             showView(holder.postcode, false);
         }
@@ -56,16 +57,13 @@ public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewVie
             showView(holder.summary, false);
         }
 
-        holder.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-
-                holder.title.setTag(getString(R.string.tag_bank_name));
-
-                mListener.onListItemSelected(v, item);
-            }
-        });
-
+        RxView.clicks(holder.getRoot())
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .takeUntil(RxView.detaches(holder.getRoot()))
+                .subscribe(click -> {
+                    holder.title.setTag(AtmOverviewViewBinder.this.getString(R.string.tag_bank_name));
+                    listener.onListItemSelected(holder.getRoot(), item);
+                });
 
     }
 }

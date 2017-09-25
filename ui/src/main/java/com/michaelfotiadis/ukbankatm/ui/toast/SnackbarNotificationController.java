@@ -23,7 +23,7 @@ public final class SnackbarNotificationController implements ActivityNotificatio
     @ColorRes
     private static final int COLOR_ALERT = R.color.error;
     @ColorRes
-    private static final int COLOR_INFO = R.color.accent;
+    private static final int COLOR_INFO = R.color.md_blue_400;
     @ColorRes
     private static final int COLOR_WHITE = R.color.white;
 

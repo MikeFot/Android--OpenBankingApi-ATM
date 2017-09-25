@@ -1,4 +1,4 @@
-package com.michaelfotiadis.ukatmdb.ui.fragment.atm;
+package com.michaelfotiadis.ukatmdb.ui.fragment.overview;
 
 
 import android.Manifest;
@@ -30,8 +30,8 @@ import com.michaelfotiadis.ukatmdb.model.AtmDetails;
 import com.michaelfotiadis.ukatmdb.network.Bank;
 import com.michaelfotiadis.ukatmdb.preferences.UserPreferences;
 import com.michaelfotiadis.ukatmdb.ui.activity.main.MainView;
-import com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler.AtmRecyclerAdapter;
-import com.michaelfotiadis.ukatmdb.ui.fragment.atm.recycler.AtmRecyclerContentUpdater;
+import com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler.AtmRecyclerAdapter;
+import com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler.AtmRecyclerContentUpdater;
 import com.michaelfotiadis.ukatmdb.utils.AppLog;
 import com.michaelfotiadis.ukatmdb.utils.ListUtils;
 import com.michaelfotiadis.ukatmdb.utils.SearchUtils;
@@ -40,7 +40,6 @@ import com.michaelfotiadis.ukbankatm.ui.activity.BaseActivity;
 import com.michaelfotiadis.ukbankatm.ui.fragment.BaseRecyclerFragment;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.manager.RecyclerManager;
 import com.michaelfotiadis.ukbankatm.ui.recyclerview.manager.State;
-import com.michaelfotiadis.ukbankatm.ui.toast.AppToast;
 import com.michaelfotiadis.ukbankatm.ui.viewmanagement.SimpleUiStateKeeper;
 import com.michaelfotiadis.ukbankatm.ui.viewmanagement.UiStateKeeper;
 import com.patloew.rxlocation.RxLocation;
@@ -70,7 +69,7 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
     private static final String ARG_BANK = AtmOverviewFragment.class.getSimpleName() + ".param.bank";
     private static final String ARG_OUTSTATE = AtmOverviewFragment.class.getSimpleName() + ".outstate";
     private static final long LOCATION_UPDATE_THRESHOLD = TimeUnit.SECONDS.toMillis(5);
-    private static final String REQUESTED_PERMISSION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final String REQUESTED_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int REQUEST_LOCATION = 504;
     protected RecyclerManager<AtmDetails> mRecyclerManager;
     @BindView(R.id.recycler_view)
@@ -343,7 +342,7 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
 
     @AskDenied(REQUESTED_PERMISSION)
     public void locationAccessDenied(final int id) {
-        AppToast.show(getContext(), R.string.error_no_permission);
+        getNotificationController().showAlert(getString(R.string.error_no_permission));
     }
 
     @SuppressWarnings("MissingPermission")
@@ -352,6 +351,7 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
         if (mLocationDisposable != null && !mLocationDisposable.isDisposed()) {
             mLocationDisposable.dispose();
         }
+        getNotificationController().showInfo(getString(R.string.toast_finding_nearest));
 
         // Create one instance and share it
         final LocationRequest locationRequest = LocationRequest.create()
@@ -359,11 +359,18 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
                 .setInterval(LOCATION_UPDATE_THRESHOLD);
 
         mLocationDisposable = new RxLocation(getContext()).location().updates(locationRequest)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .flatMap(location -> new RxLocation(getContext()).geocoding().fromLocation(location).toObservable())
                 .map(this::findNearestAddresses)
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(details -> mContentUpdater.setItems(details));
+                .subscribe(this::sortByNearest);
+    }
+
+    private void sortByNearest(final List<AtmDetails> sortedDetails) {
+        mContentUpdater.setItems(sortedDetails);
+        writePreferences(sortedDetails);
+        getNotificationController().showInfo(getString(R.string.toast_sorted));
+        mLocationDisposable.dispose();
     }
 
     private List<AtmDetails> findNearestAddresses(@NonNull final Address address) {
@@ -387,7 +394,6 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
                 final double distance;
                 if (lon != null && lat != null) {
                     distance = Math.hypot(lon - address.getLongitude(), lat - address.getLatitude());
-                    AppLog.d("Adding " + distance + " atm " + atm.getAddressTownName());
                 } else {
                     distance = Double.MAX_VALUE;
                 }
