@@ -330,7 +330,7 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
             AppLog.d("Asking for location permission");
             Ask.on(getActivity())
                     .forPermissions(REQUESTED_PERMISSION)
-                    .withRationales("In order to find the nearest ATM, the app needs access to your general location.")
+                    .withRationales(getString(R.string.rationale_location))
                     .go();
         }
     }
@@ -348,9 +348,11 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
     @SuppressWarnings("MissingPermission")
     private void getUserLocation() {
         AppLog.d("Got user location");
+
         if (mLocationDisposable != null && !mLocationDisposable.isDisposed()) {
             mLocationDisposable.dispose();
         }
+
         getNotificationController().showInfo(getString(R.string.toast_finding_nearest));
 
         // Create one instance and share it

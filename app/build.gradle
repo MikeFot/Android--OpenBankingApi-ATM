@@ -33,14 +33,12 @@ final def LONG = "long"
 final def INT = "int"
 
 
-final String leakCanaryVersion = "1.5.1"
 final String butterKnifeVersion = "8.6.0"
 final String daggerVersion = "2.11"
-final String googlePlayServicesVersion = "11.0.4"
 
-final int versionMajor = 0
+final int versionMajor = 1
 final int versionMinor = 0
-final int versionPatch = 1
+final int versionPatch = 0
 final int androidVersionCode = 1
 final String semanticVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
 
@@ -97,9 +95,13 @@ android {
     buildTypes {
 
         release {
+
             minifyEnabled false
             debuggable false
+
             signingConfig signingConfigs.release
+
+
         }
 
         debug {

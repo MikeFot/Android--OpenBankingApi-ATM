@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">UK ATM Db</string>
+    <string name="app_name">ATM Finder (UK)</string>
     <string name="main_title">Banks</string>
 
     <string name="bank_of_ireland">Bank of Ireland</string>
@@ -24,8 +24,6 @@
     <string name="tag_bank_name">tag_bank</string>
     <string name="bank_transition">bank_transition</string>
 
-    <string name="attribution_banking_images">"Banking Icons Created by Kreativkolors - Freepik.com"</string>
-    <string name="attribution_banking_images_2">"Banking Icons Created by Dooder - Freepik.com"</string>
     <string name="bullet_placeholder">"\u2022 %1$s"</string>
     <string name="placeholder_label"> &lt;B&gt;%s&lt;/B&gt;</string>
     <string name="placeholder_address_street_name">Street: %s</string>
@@ -45,5 +43,6 @@
     <string name="supported_languages">Supported Languages</string>
     <string name="toast_sorted">Sorted by nearest</string>
     <string name="toast_finding_nearest">Finding nearest cash points</string>
+    <string name="rationale_location">In order to find the nearest ATM, the app needs access to your general location.</string>
 
 </resources>
