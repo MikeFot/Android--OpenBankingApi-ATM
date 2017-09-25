@@ -32,9 +32,9 @@ import com.michaelfotiadis.ukatmdb.preferences.UserPreferences;
 import com.michaelfotiadis.ukatmdb.ui.activity.main.MainView;
 import com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler.AtmRecyclerAdapter;
 import com.michaelfotiadis.ukatmdb.ui.fragment.overview.recycler.AtmRecyclerContentUpdater;
+import com.michaelfotiadis.ukatmdb.ui.fragment.overview.utils.AtmFilterUtils;
 import com.michaelfotiadis.ukatmdb.utils.AppLog;
 import com.michaelfotiadis.ukatmdb.utils.ListUtils;
-import com.michaelfotiadis.ukatmdb.utils.SearchUtils;
 import com.michaelfotiadis.ukatmdb.utils.TextUtils;
 import com.michaelfotiadis.ukbankatm.ui.activity.BaseActivity;
 import com.michaelfotiadis.ukbankatm.ui.fragment.BaseRecyclerFragment;
@@ -47,11 +47,8 @@ import com.vistrav.ask.Ask;
 import com.vistrav.ask.annotations.AskDenied;
 import com.vistrav.ask.annotations.AskGranted;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -59,7 +56,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -70,21 +66,19 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
     private static final String ARG_OUTSTATE = AtmOverviewFragment.class.getSimpleName() + ".outstate";
     private static final long LOCATION_UPDATE_THRESHOLD = TimeUnit.SECONDS.toMillis(5);
     private static final String REQUESTED_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final int REQUEST_LOCATION = 504;
-    protected RecyclerManager<AtmDetails> mRecyclerManager;
+
+
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @Inject
     Gson mGson;
+
+    protected RecyclerManager<AtmDetails> mRecyclerManager;
     private AtmOverviewPresenter mBankPresenter;
     private AtmRecyclerContentUpdater mContentUpdater;
     private List<AtmDetails> mItems;
     private DisposableObserver<SearchViewQueryTextEvent> mSearchDisposable;
     private Disposable mLocationDisposable;
-
-    public AtmOverviewFragment() {
-        // Required empty public constructor
-    }
 
     public static AtmOverviewFragment newInstance(final Bank bank) {
         final AtmOverviewFragment fragment = new AtmOverviewFragment();
@@ -123,7 +117,7 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
         if (mLocationDisposable != null) {
             mLocationDisposable.dispose();
         }
-        writePreferences(Collections.<AtmDetails>emptyList());
+        writePreferences(Collections.emptyList());
 
     }
 
@@ -361,11 +355,21 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
                 .setInterval(LOCATION_UPDATE_THRESHOLD);
 
         mLocationDisposable = new RxLocation(getContext()).location().updates(locationRequest)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .flatMap(location -> new RxLocation(getContext()).geocoding().fromLocation(location).toObservable())
-                .map(this::findNearestAddresses)
+                .map(this::filterByNearestAddress)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::sortByNearest);
+    }
+
+    private List<AtmDetails> filterByNearestAddress(final Address address) {
+        if (address == null) {
+            AppLog.e("NULL ADDRESS!!!");
+            Crashlytics.logException(new Exception("Null address!"));
+            return ListUtils.isListNotNullOrEmpty(mItems) ? mItems : Collections.emptyList();
+        } else {
+            return AtmFilterUtils.findNearestAddresses(address, mItems);
+        }
     }
 
     private void sortByNearest(final List<AtmDetails> sortedDetails) {
@@ -373,40 +377,6 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
         writePreferences(sortedDetails);
         getNotificationController().showInfo(getString(R.string.toast_sorted));
         mLocationDisposable.dispose();
-    }
-
-    private List<AtmDetails> findNearestAddresses(@NonNull final Address address) {
-        if (address == null) {
-            AppLog.e("NULL ADDRESS!!!");
-            Crashlytics.logException(new Exception("Null address!"));
-            return ListUtils.isListNotNullOrEmpty(mItems) ? mItems : Collections.emptyList();
-        }
-
-        AppLog.d("Got address " + address.getLatitude() + " " + address.getLongitude());
-        if (ListUtils.isListNotNullOrEmpty(mItems)) {
-            mContentUpdater.setItems(Collections.emptyList());
-
-            final Map<Double, AtmDetails> tree = new TreeMap<>();
-
-            for (final AtmDetails atm : mItems) {
-
-                final Double lon = atm.getLongitudeAsDouble();
-                final Double lat = atm.getLatitudeAsDouble();
-
-                final double distance;
-                if (lon != null && lat != null) {
-                    distance = Math.hypot(lon - address.getLongitude(), lat - address.getLatitude());
-                } else {
-                    distance = Double.MAX_VALUE;
-                }
-
-                tree.put(distance, atm);
-            }
-
-            return new ArrayList<>(tree.values());
-        } else {
-            return ListUtils.isListNotNullOrEmpty(mItems) ? mItems : Collections.emptyList();
-        }
     }
 
     private void filterItems(final String query) {
@@ -417,31 +387,11 @@ public class AtmOverviewFragment extends BaseRecyclerFragment<AtmDetails> implem
                 mContentUpdater.setItems(mItems);
             } else {
                 AppLog.d(String.format("Searching for %s", query));
-                final List<AtmDetails> filteredItems = new ArrayList<>();
-
-                for (final AtmDetails details : mItems) {
-
-                    if (SearchUtils.isThereAMatch(details.getLabel(), query)
-                            || SearchUtils.isThereAMatch(details.getSiteName(), query)
-                            || SearchUtils.isThereAMatch(details.getAddressCountry(), query)
-                            || SearchUtils.isThereAMatch(details.getAddressPostCode(), query)
-                            || SearchUtils.isThereAMatch(details.getAddressTownName(), query)
-                            || SearchUtils.isThereAMatch(details.getAddressBuildingNumberOrName(), query)
-                            || SearchUtils.isThereAMatch(details.getAddressOptionalAddressField(), query)
-                            || SearchUtils.isThereAMatch(details.getAddressStreetName(), query)
-                            || SearchUtils.isThereAMatch(details.getSupportedLanguages(), query)
-                            || SearchUtils.isThereAMatch(details.getAdditionalATMServices(), query)
-                            || SearchUtils.isThereAMatch(details.getAccessibilityTypes(), query)
-                            || SearchUtils.isThereAMatch(details.getAtmServices(), query)
-                            || SearchUtils.isThereAMatch(details.getCurrency(), query)) {
-                        filteredItems.add(details);
-                    }
-
-                }
-                mContentUpdater.setItems(filteredItems);
+                mContentUpdater.setItems(AtmFilterUtils.getFilteredItems(query, mItems));
             }
         }
 
     }
+
 
 }
