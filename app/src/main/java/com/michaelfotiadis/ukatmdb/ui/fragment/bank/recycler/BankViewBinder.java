@@ -9,9 +9,12 @@ import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerView
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.disposables.Disposable;
+
 public class BankViewBinder extends BaseRecyclerViewBinder<BankViewHolder, UiBank> {
 
     private final OnItemSelectedListener<UiBank> listener;
+    private Disposable disposable;
 
 
     protected BankViewBinder(final Context context, final OnItemSelectedListener<UiBank> listener) {
@@ -29,10 +32,16 @@ public class BankViewBinder extends BaseRecyclerViewBinder<BankViewHolder, UiBan
 
         holder.mTitle.setText(item.getName());
 
-        RxView.clicks(holder.getRoot())
+        disposable = RxView.clicks(holder.getRoot())
                 .debounce(200, TimeUnit.MILLISECONDS)
-                .takeUntil(RxView.detaches(holder.getRoot()))
                 .subscribe(click -> listener.onListItemSelected(holder.getRoot(), item));
 
+    }
+
+    @Override
+    public void detach() {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 }

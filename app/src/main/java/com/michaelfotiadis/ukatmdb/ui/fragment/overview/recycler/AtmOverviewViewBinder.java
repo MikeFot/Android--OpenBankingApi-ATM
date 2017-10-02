@@ -11,9 +11,12 @@ import com.michaelfotiadis.ukbankatm.ui.recyclerview.viewbinder.BaseRecyclerView
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.disposables.Disposable;
+
 public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewViewHolder, AtmDetails> {
 
     private final OnItemSelectedListener<AtmDetails> listener;
+    private Disposable disposable;
 
     protected AtmOverviewViewBinder(final Context context, final OnItemSelectedListener<AtmDetails> listener) {
         super(context);
@@ -56,14 +59,20 @@ public class AtmOverviewViewBinder extends BaseRecyclerViewBinder<AtmOverviewVie
         } else {
             showView(holder.summary, false);
         }
-
-        RxView.clicks(holder.getRoot())
+        
+        disposable = RxView.clicks(holder.getRoot())
                 .debounce(200, TimeUnit.MILLISECONDS)
-                .takeUntil(RxView.detaches(holder.getRoot()))
                 .subscribe(click -> {
                     holder.title.setTag(AtmOverviewViewBinder.this.getString(R.string.tag_bank_name));
                     listener.onListItemSelected(holder.getRoot(), item);
                 });
 
+    }
+
+    @Override
+    public void detach() {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 }

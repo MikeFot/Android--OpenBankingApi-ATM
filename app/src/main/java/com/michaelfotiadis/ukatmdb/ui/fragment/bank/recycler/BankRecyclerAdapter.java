@@ -1,6 +1,7 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.bank.recycler;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,4 +38,9 @@ public class BankRecyclerAdapter extends BaseRecyclerViewAdapter<UiBank, BankVie
         mBinder.bind(holder, getItem(position));
     }
 
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mBinder.detach();
+    }
 }

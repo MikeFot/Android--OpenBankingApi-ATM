@@ -39,4 +39,9 @@ public class AdditionalServicesViewBinder extends BaseRecyclerViewBinder<Additio
         }
 
     }
+
+    @Override
+    public void detach() {
+        // NOOP
+    }
 }

@@ -28,4 +28,9 @@ public class GeneralInfoViewBinder extends BaseRecyclerViewBinder<GeneralInfoVie
         }
 
     }
+
+    @Override
+    public void detach() {
+        // NOOP
+    }
 }

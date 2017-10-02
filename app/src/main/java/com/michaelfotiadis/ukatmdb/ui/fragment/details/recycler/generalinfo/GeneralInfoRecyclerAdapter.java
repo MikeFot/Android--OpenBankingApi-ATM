@@ -1,6 +1,7 @@
 package com.michaelfotiadis.ukatmdb.ui.fragment.details.recycler.generalinfo;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,5 +32,11 @@ public class GeneralInfoRecyclerAdapter extends BaseRecyclerViewAdapter<String, 
     @Override
     public void onBindViewHolder(final GeneralInfoViewHolder holder, final int position) {
         binder.setData(holder, getItem(position));
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        binder.detach();
     }
 }

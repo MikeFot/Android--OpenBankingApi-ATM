@@ -51,4 +51,6 @@ public abstract class BaseRecyclerViewBinder<VH extends BaseRecyclerViewHolder, 
     protected void showView(final View view, final boolean show) {
         ViewUtils.showView(view, show);
     }
+
+    public abstract void detach();
 }
